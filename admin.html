@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة التحكم</title>
+
+<style>
+body { font-family:Tahoma; padding:20px; background:#f5f5f5; }
+input, button { width:100%; padding:10px; margin:10px 0; }
+button { background:green; color:white; border:none; }
+</style>
+</head>
+
+<body>
+
+<h2>➕ إضافة كتاب</h2>
+
+<input id="name" placeholder="اسم الكتاب">
+<input id="price" type="number" placeholder="السعر">
+<input id="img" placeholder="رابط الصورة">
+
+<button onclick="addBook()">إضافة</button>
+
+<hr>
+
+<h3>📚 الكتب الحالية</h3>
+<div id="list"></div>
+
+<script>
+function loadBooks() {
+  let books = JSON.parse(localStorage.getItem("books")) || [];
+  let list = "";
+  books.forEach((b,i) => {
+    list += `
+      <div>
+        ${b.name} - ${b.price}
+        <button onclick="deleteBook(${i})">حذف</button>
+      </div>
+    `;
+  });
+  document.getElementById("list").innerHTML = list;
+}
+
+function addBook() {
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  let img = document.getElementById("img").value;
+
+  if(!name || !price || !img){
+    alert("املي كل البيانات");
+    return;
+  }
+
+  let books = JSON.parse(localStorage.getItem("books")) || [];
+  books.push({name, price, img});
+  localStorage.setItem("books", JSON.stringify(books));
+
+  alert("تمت الإضافة ✅");
+  loadBooks();
+}
+
+function deleteBook(index){
+  let books = JSON.parse(localStorage.getItem("books")) || [];
+  books.splice(index,1);
+  localStorage.setItem("books", JSON.stringify(books));
+  loadBooks();
+}
+
+loadBooks();
+</script>
+
+</body>
+</html>
